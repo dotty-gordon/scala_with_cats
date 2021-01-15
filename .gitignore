@@ -1,0 +1,13 @@
+*.DS_Store
+.gradle
+gradlew.bat
+out/
+/build/
+gen/
+*/target/*
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
