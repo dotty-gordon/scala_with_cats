@@ -1,8 +1,11 @@
-import cats.Show
-import cats.instances.int._ // for Show
-import cats.instances.string._ // for Show
+import cats.{Eq, Show}
+import cats.instances.int._
+import cats.instances.string._
 import cats.syntax.show._ // for show
-
+import cats.syntax.eq._
+import cats.instances.long._
+import cats.instances.option._
+import cats.syntax.option._
 
 trait Printable[T] {
   def format(value: T): String
@@ -73,20 +76,62 @@ object Main {
     println(shownInt)
     println(shownString)
 
-//    implicit val showDate = new Show[Date] {
-//      override def show(t: Date): String = s"${t.getTime}ms since the epoch."
-//    }
+    //    implicit val showDate = new Show[Date] {
+    //      override def show(t: Date): String = s"${t.getTime}ms since the epoch."
+    //    }
 
     implicit val showDateUsingCompanionMethods: Show[Date] = Show.show(date => s"${date.getTime}ms since the epoch.")
 
-   // implicit val showDate: Show[Date] = Show.fromToString
+    // implicit val showDate: Show[Date] = Show.fromToString
 
 
-    print(new Date().show)
+    println(new Date().show)
 
-    implicit val showCat: Show[Cat] = Show.show(cat =>  s"${cat.name} is a ${cat.age} year-old ${cat.color} cat.")
+    implicit val showCat: Show[Cat] = Show.show(cat => s"${cat.name} is a ${cat.age} year-old ${cat.color} cat.")
     val garfield = Cat(name = "Garfield", age = 6, color = "Brown")
-    print(garfield.show)
+    println(garfield.show)
+
+
+    lazy val evaluateDateEq = {
+      implicit val dateEq: Eq[Date] =
+        Eq.instance[Date] { (date1, date2) =>
+          date1.getTime === date2.getTime
+        }
+
+      val now = new Date() // now
+      val later = new Date() // a bit later than now
+      now === now // true
+      now === later // false
+      println("Date Equality")
+    }
+
+
+    lazy val evaluateCatEq = {
+
+      implicit val catEq: Eq[Cat] =
+        Eq.instance[Cat] { (cat1, cat2) =>
+          (cat1.name === cat2.name && cat1.age === cat2.age && cat1.color === cat2.color)
+        }
+
+      val garfield = Cat(name = "Garfield", age = 6, color = "Brown")
+      val fluffy = Cat(name = "Fluffy", age = 10, color = "White")
+
+      val optionGarfield = garfield.some
+      val optionNoCat = none[Cat]
+
+      println("/**  Cats Eq */")
+      println(garfield === garfield)
+      println(garfield =!= fluffy)
+      println(garfield =!= fluffy)
+      println(optionGarfield =!= optionNoCat)
+      println("/**  Cats Eq */")
+
+
+    }
+
+
+    evaluateCatEq
+
 
   }
 
