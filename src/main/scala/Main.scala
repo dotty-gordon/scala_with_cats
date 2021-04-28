@@ -6,6 +6,7 @@ import cats.syntax.eq._
 import cats.instances.long._
 import cats.instances.option._
 import cats.syntax.option._
+import MonoidInstances.booleanANDMonoid
 
 trait Printable[T] {
   def format(value: T): String
@@ -124,13 +125,23 @@ object Main {
       println(garfield =!= fluffy)
       println(garfield =!= fluffy)
       println(optionGarfield =!= optionNoCat)
-      println("/**  Cats Eq */")
+      println()
 
 
     }
 
 
     evaluateCatEq
+
+
+
+    val monoid: Monoid[Boolean] = Monoid.apply
+
+    println("*** Monoid ***")
+    println(monoid.combine(true, false) == monoid.combine(false, true))
+    println()
+
+
 
 
   }
