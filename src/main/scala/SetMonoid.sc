@@ -1,4 +1,5 @@
 import cats.implicits.catsSyntaxEq
+import cats.kernel.Monoid
 import cats.kernel.Semigroup
 object SetMonoid {
   implicit def setUnionMonoid[A] = new Monoid[Set[A]] {
